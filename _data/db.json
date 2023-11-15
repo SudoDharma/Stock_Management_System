@@ -1,0 +1,117 @@
+{
+  "barang": [
+    {
+      "id": 1,
+      "nama_barang": "Semen tonasa",
+      "stok": 20,
+      "satuan": "zak"
+    },
+    {
+      "id": 2,
+      "nama_barang": "Paku seng",
+      "stok": 3,
+      "satuan": "dus"
+    },
+    {
+      "id": 3,
+      "nama_barang": "Pipa paralon",
+      "stok": 25,
+      "satuan": "batang"
+    },
+    {
+      "id": 4,
+      "nama_barang": "Besi",
+      "stok": 30,
+      "satuan": "batang"
+    },
+    {
+      "id": 5,
+      "nama_barang": "Cat avitex",
+      "stok": 12,
+      "satuan": "ember"
+    },
+    {
+      "id": 6,
+      "nama_barang": "Kuas cat",
+      "stok": 30,
+      "satuan": "buah"
+    },
+    {
+      "id": 7,
+      "nama_barang": "Tripleks",
+      "stok": 35,
+      "satuan": "lembar"
+    },
+    {
+      "id": 8,
+      "nama_barang": "Palu",
+      "stok": 27,
+      "satuan": "buah"
+    },
+    {
+      "id": 9,
+      "nama_barang": "Keran air",
+      "stok": 15,
+      "satuan": "buah"
+    },
+    {
+      "id": 10,
+      "nama_barang": "Paku beton",
+      "stok": 3,
+      "satuan": "dus"
+    }
+  ],
+
+  "penjualan": [
+    {
+      "id": 1,
+      "tanggal": "9-11-2023",
+      "barang": ["Semen tonasa"]
+    },
+    {
+      "id": 2,
+      "tanggal": "9-11-2023",
+      "barang": ["Paku seng", "Paku beton", "Palu"]
+    },
+    {
+      "id": 3,
+      "tanggal": "9-11-2023",
+      "barang": ["Besi", "Tripleks", "Semen tonasa"]
+    },
+    {
+      "id": 4,
+      "tanggal": "10-11-2023",
+      "barang": ["Paku beton", "Palu"]
+    },
+    {
+      "id": 5,
+      "tanggal": "10-11-2023",
+      "barang": ["Kuas cat", "Cat avitex"]
+    },
+    {
+      "id": 6,
+      "tanggal": "10-11-2023",
+      "barang": ["Pipa paralon", "Keran air"]
+    },
+    {
+      "id": 7,
+      "tanggal": "10-11-2023",
+      "barang": ["Semen tonasa", "Paku beton", "Besi"]
+    },
+    {
+      "id": 8,
+      "tanggal": "11-11-2023",
+      "barang": ["Kuas cat", "Cat avitex", "Tripleks"]
+    },
+    {
+      "id": 9,
+      "tanggal": "11-11-2023",
+      "barang": ["Pipa paralon", "Keran air"]
+    },
+    {
+      "id": 10,
+      "tanggal": "11-11-2023",
+      "barang": ["Paku seng", "Palu"]
+    }
+  ]
+}
