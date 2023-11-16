@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconHome2, IconSettings, IconPackage, IconShoppingCart, IconTruckDelivery } from "@tabler/icons-react";
+import {
+  IconHome2,
+  IconSettings,
+  IconPackage,
+  IconShoppingCart,
+  IconTruckDelivery,
+  IconReportAnalytics,
+} from "@tabler/icons-react";
 
 export default function Sidebar() {
   const currentRoute = usePathname();
@@ -29,6 +36,10 @@ export default function Sidebar() {
         <Link href="/penjualan" className={currentRoute.includes("/penjualan") ? linkStyle.active : linkStyle.inactive}>
           <IconShoppingCart />
           <li>Penjualan</li>
+        </Link>
+        <Link href="/metode" className={currentRoute.includes("/metode") ? linkStyle.active : linkStyle.inactive}>
+          <IconReportAnalytics />
+          <li>Metode</li>
         </Link>
         <Link href="*" className={currentRoute === "" ? linkStyle.active : linkStyle.inactive}>
           <IconSettings />

@@ -25,3 +25,12 @@ model Penjualan{
   tanggal String
   barang String[]
 }
+
+model Pemesanan{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  tanggal String
+  barang String
+  jumlah Int
+  status Boolean @default(false)
+}

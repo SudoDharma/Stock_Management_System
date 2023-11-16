@@ -5,16 +5,15 @@ export const POST = async (req) => {
   const prisma = new PrismaClient();
   try {
     const body = await req.json();
-    const { namaBarang, stok, satuan, harga } = body;
-    const newBarang = await prisma.barang.create({
+    const { tanggal, barang, jumlah } = body;
+    const newPemesanan = await prisma.pemesanan.create({
       data: {
-        namaBarang,
-        stok,
-        satuan,
-        harga,
+        tanggal,
+        barang,
+        jumlah,
       },
     });
-    return NextResponse.json({ newBarang, message: "Ok" }, { status: 201 });
+    return NextResponse.json({ newPemesanan, message: "Ok" }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
   }

@@ -1,30 +1,48 @@
 "use client";
 
-import { Form, Input, InputNumber, Select } from "antd";
-import { useState } from "react";
+import { Form, InputNumber, Select, DatePicker } from "antd";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ButtonSpinner from "@/app/components/ButtonSpinner";
 
-const AddBarangForm = () => {
-  const [loading, setLoading] = useState(false);
+const AddPemesananForm = ({ barang }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [selectOption, setSelectOption] = useState([]);
+
+  useEffect(() => {
+    const newSelectOption = [];
+    barang.map((barang) => {
+      newSelectOption.push({ value: barang.namaBarang });
+    });
+    setSelectOption(newSelectOption);
+  }, []);
+
+  const checkSatuan = (nama) => {
+    const satuan = barang.filter((items) => {
+      return items.namaBarang === nama;
+    });
+
+    return satuan[0].satuan;
+  };
 
   const onFinish = async (values) => {
-    console.log("Success:", values);
+    const newValues = { ...values, tanggal: values.tanggal.format("DD-MM-YYYY") };
+    console.log("newValues", newValues);
     setLoading(true);
 
     try {
-      const res = await fetch("/api/barang", {
+      const res = await fetch("/api/pemesanan", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(newValues),
       });
       if (res.ok) {
         setLoading(false);
         router.refresh();
-        router.push("/barang");
+        router.push("/pemesanan");
       }
     } catch (error) {
       console.log("error", error);
@@ -35,30 +53,6 @@ const AddBarangForm = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-
-  const selectOption = [
-    {
-      value: "Zak",
-    },
-    {
-      value: "Dus",
-    },
-    {
-      value: "Batang",
-    },
-    {
-      value: "Buah",
-    },
-    {
-      value: "Ember",
-    },
-    {
-      value: "Lembar",
-    },
-    {
-      value: "Bungkus",
-    },
-  ];
 
   return (
     <Form
@@ -82,57 +76,46 @@ const AddBarangForm = () => {
       requiredMark={false}
     >
       <Form.Item
-        label="Nama barang"
-        name="namaBarang"
+        label="Tanggal"
+        name="tanggal"
         rules={[
           {
             required: true,
-            message: "Masukan nama barang!",
+            message: "Masukan tanggal!",
           },
         ]}
       >
-        <Input />
+        <DatePicker placeholder="Pilih tanggal" format={"DD-MM-YYYY"} />
       </Form.Item>
 
       <Form.Item
-        label="Stok"
-        name="stok"
+        label="Barang"
+        name="barang"
         rules={[
           {
             required: true,
-            message: "Masukan jumlah stok!",
-          },
-        ]}
-      >
-        <InputNumber />
-      </Form.Item>
-
-      <Form.Item
-        label="Satuan"
-        name="satuan"
-        rules={[
-          {
-            required: true,
-            message: "Pilih satuan barang!",
+            message: "Pilih barang!",
           },
         ]}
       >
         <Select
+          placeholder={"Pilih barang yang dipesan"}
+          allowClear
           showSearch
+          options={selectOption}
           filterSort={(optionA, optionB) =>
             (optionA?.value ?? "").toLowerCase().localeCompare((optionB?.value ?? "").toLowerCase())
           }
-          options={selectOption}
         />
       </Form.Item>
 
       <Form.Item
-        label="Harga"
-        name="harga"
+        label="Jumlah"
+        name="jumlah"
         rules={[
           {
             required: true,
-            message: "Masukan harga!",
+            message: "Masukan jumlah barang!",
           },
         ]}
       >
@@ -162,4 +145,4 @@ const AddBarangForm = () => {
   );
 };
 
-export default AddBarangForm;
+export default AddPemesananForm;

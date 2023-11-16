@@ -302,7 +302,7 @@ const AddPenjualanForm = ({ barang }) => {
                 <ButtonSpinner />
               </div>
             )}
-            {!loading && <div>Tambah</div>}
+            {!loading && <div>Simpan</div>}
           </button>
         </Form.Item>
       </Form>
