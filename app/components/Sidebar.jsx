@@ -19,7 +19,7 @@ export default function Sidebar() {
   };
 
   return (
-    <nav className="pt-10 pl-5 w-[200px] min-h-screen bg-indigo-500">
+    <nav className="fixed pt-10 pl-5 w-[200px] min-h-screen bg-indigo-500">
       <ul className="flex flex-col gap-5">
         <Link href="/" className={currentRoute === "/" ? linkStyle.active : linkStyle.inactive}>
           <IconHome2 />

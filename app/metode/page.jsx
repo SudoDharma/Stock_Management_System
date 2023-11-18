@@ -3,6 +3,7 @@ import EOQTable from "./EOQTable";
 import { PrismaClient } from "@prisma/client";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
+import { Tabs } from "antd";
 dayjs.extend(customParseFormat);
 
 const prisma = new PrismaClient();
@@ -38,19 +39,27 @@ const MetodePage = async () => {
     newPenjualan.push(newItems);
   });
 
+  const items = [
+    {
+      key: "1",
+      label: "Metode Min/Max",
+      children: <MinMaxTable barang={barang} penjualan={newPenjualan} />,
+    },
+    {
+      key: "2",
+      label: "Metode EOQ",
+      children: <EOQTable barang={barang} penjualan={newPenjualan} />,
+    },
+  ];
+
   return (
     <div>
       <title>Metode</title>
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
-      <div className="px-10 py-5 flex flex-col gap-10">
-        <div className="p-5 bg-white border-black rounded-md shadow-md">
-          <p className="mb-3 font-medium">Metode Min/Max</p>
-          <MinMaxTable barang={barang} penjualan={newPenjualan} />
-        </div>
-        <div className="p-5 bg-white border-black rounded-md shadow-md">
-          <p className="mb-3 font-medium">Metode EOQ</p>
-          <EOQTable barang={barang} penjualan={newPenjualan} />
+      <div className="px-10 py-5">
+        <div className="p-5 bg-white rounded-md shadow-md">
+          <Tabs defaultActiveKey="1" items={items} />
         </div>
       </div>
     </div>

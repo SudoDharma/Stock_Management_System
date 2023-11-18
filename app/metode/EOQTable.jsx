@@ -41,34 +41,34 @@ const EOQTable = ({ barang, penjualan }) => {
     });
 
     const itemCost = barang.filter((item1) => item1.namaBarang === nama_barang).map((item2) => item2.harga);
-    const H = storageCost / totalSalesInYear;
+    const H = Math.round(storageCost / totalSalesInYear);
 
-    const EOQ = Math.sqrt((2 * totalSalesInYear * itemCost[0]) / H);
+    const EOQ = Math.round(Math.sqrt((2 * totalSalesInYear * itemCost[0]) / H));
 
-    const frequency = totalSalesInYear / EOQ;
+    const frequency = Math.round(totalSalesInYear / EOQ);
 
-    const reorderPoint = (totalSalesInYear / 12) * leadTime;
+    const reorderPoint = Math.ceil((totalSalesInYear / 360) * leadTime);
 
-    const averageStorage = reorderPoint + EOQ / 2;
+    const averageStorage = Math.round(reorderPoint + EOQ / 2);
     const P = itemCost[0] + orderCost;
 
     const TIC1 = totalSalesInYear * itemCost[0];
     const TIC2 = (totalSalesInYear * P) / EOQ;
     const TIC3 = averageStorage * H;
 
-    const totalInventoryCost = TIC1 + TIC2 + TIC3;
+    const totalInventoryCost = Math.round(TIC1 + TIC2 + TIC3);
 
     return {
-      totalSalesInYear: Math.round(totalSalesInYear),
-      itemCost: Math.round(itemCost[0]),
-      H: Math.round(H),
-      EOQ: Math.round(EOQ),
-      frequency: Math.round(frequency),
+      totalSalesInYear: totalSalesInYear,
+      itemCost: itemCost[0],
+      H: H,
+      EOQ: EOQ,
+      frequency: frequency,
       leadTime: leadTime,
-      reorderPoint: Math.round(reorderPoint),
+      reorderPoint: reorderPoint,
       orderCost: orderCost,
-      averageStorage: Math.round(averageStorage),
-      totalInventoryCost: Math.round(totalInventoryCost),
+      averageStorage: averageStorage,
+      totalInventoryCost: totalInventoryCost,
     };
   };
 
@@ -175,8 +175,6 @@ const EOQTable = ({ barang, penjualan }) => {
     },
   ];
 
-  console.log(EOQ);
-
   return (
     <div>
       <Form
@@ -238,6 +236,10 @@ const EOQTable = ({ barang, penjualan }) => {
           columns={columns}
           dataSource={EOQ}
           rowKey={"id"}
+          scroll={{
+            x: 1100,
+          }}
+          pagination={false}
         />
       </Form>
     </div>

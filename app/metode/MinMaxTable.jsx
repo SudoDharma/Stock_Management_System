@@ -9,16 +9,20 @@ dayjs.extend(customParseFormat);
 const MinMaxTable = ({ barang, penjualan }) => {
   const [minMax, setMinMax] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
+  const [form] = Form.useForm();
 
-  const countMinMax = (nama_barang, monthYear) => {
-    const leadTime = 7;
+  const countMinMax = (nama_barang, tanggal_mulai, tanggal_selesai) => {
+    const leadTime = 0.23; // 7 divided by 30
     const itemSales = [];
 
-    const penjualanBulan = penjualan.filter((item) => {
-      return item.tanggal.includes(monthYear);
+    const penjualanTahun = penjualan.filter((item) => {
+      return (
+        dayjs(item.tanggal, "DD-MM-YYYY").isBefore(dayjs(tanggal_mulai, "DD-MM-YYYY")) &&
+        dayjs(item.tanggal, "DD-MM-YYYY").isAfter(dayjs(tanggal_selesai, "DD-MM-YYYY"))
+      );
     });
 
-    penjualanBulan.map((item1) => {
+    penjualanTahun.map((item1) => {
       item1.barang.map((item2) => {
         if (item2.nama_barang === nama_barang) {
           itemSales.push(item2);
@@ -26,55 +30,43 @@ const MinMaxTable = ({ barang, penjualan }) => {
       });
     });
 
-    if (itemSales.length === 0) {
-      return {
-        leadTime: leadTime,
-        totalSalesInMonth: 0,
-        averageSalesInMonth: 0,
-        maximumSalesInMonth: 0,
-        safetyStock: 0,
-        minimumStock: 0,
-        maximumStock: 0,
-        reorderStock: 0,
-      };
-    }
-
     const salesNumber = itemSales.map((item) => {
       return item.jumlah;
     });
 
-    const maximumSalesInMonth = Math.max(...salesNumber);
-
-    const daysInMonth = dayjs(`01-${monthYear}`).daysInMonth();
-    const totalSalesInMonth = salesNumber.reduce((accumulator, currentValue) => {
+    const totalSalesInYear = salesNumber.reduce((accumulator, currentValue) => {
       return accumulator + currentValue;
-    }, 0);
+    });
+    const maximumSalesInYear = Math.max(...salesNumber);
 
-    const averageSalesInMonth = totalSalesInMonth / daysInMonth;
+    const averageSalesInYear = Math.round(totalSalesInYear / 12);
 
-    const safetyStock = (maximumSalesInMonth - averageSalesInMonth) * leadTime;
-    const minimumStock = averageSalesInMonth * leadTime + safetyStock;
-    const maximumStock = 2 * (averageSalesInMonth * leadTime) + safetyStock;
-    const reorderStock = maximumStock - minimumStock;
+    const safetyStock = Math.ceil((maximumSalesInYear - averageSalesInYear) * leadTime);
+    const minimumStock = Math.ceil(averageSalesInYear * leadTime + safetyStock);
+    const maximumStock = Math.round(2 * (averageSalesInYear * leadTime) + safetyStock);
+    const orderQuantity = Math.round(2 * averageSalesInYear * leadTime);
+    const frequency = Math.round(totalSalesInYear / orderQuantity);
 
     return {
-      leadTime: leadTime,
-      totalSalesInMonth: Math.round(totalSalesInMonth),
-      averageSalesInMonth: Math.ceil(averageSalesInMonth),
-      maximumSalesInMonth: Math.round(maximumSalesInMonth),
-      safetyStock: Math.round(safetyStock),
-      minimumStock: Math.round(minimumStock),
-      maximumStock: Math.round(maximumStock),
-      reorderStock: Math.round(reorderStock),
+      leadTime: leadTime.toFixed(2),
+      totalSalesInYear: totalSalesInYear,
+      maximumSalesInYear: maximumSalesInYear,
+      averageSalesInYear: averageSalesInYear,
+      safetyStock: safetyStock,
+      minimumStock: minimumStock,
+      maximumStock: maximumStock,
+      orderQuantity: orderQuantity,
+      frequency: frequency,
     };
   };
 
   const onFinish = (values) => {
-    const tanggal = values.tanggal.format("MM-YYYY");
+    const tanggal_mulai = dayjs(values.tanggal_mulai, "DD-MM-YYYY");
+    const tanggal_selesai = dayjs(values.tanggal_selesai, "DD-MM-YYYY");
     const minMaxBarang = [];
 
     barang.map((item) => {
-      const minMaxValues = countMinMax(item.namaBarang, tanggal);
+      const minMaxValues = countMinMax(item.namaBarang, tanggal_mulai, tanggal_selesai);
       minMaxBarang.push({ ...minMaxValues, ...item });
     });
 
@@ -99,14 +91,20 @@ const MinMaxTable = ({ barang, penjualan }) => {
       width: "20%",
     },
     {
+      title: "Total penjualan",
+      dataIndex: "totalSalesInYear",
+      align: "center",
+      width: "10%",
+    },
+    {
       title: "Penjualan maksimum",
-      dataIndex: "maximumSalesInMonth",
+      dataIndex: "maximumSalesInYear",
       align: "center",
       width: "10%",
     },
     {
       title: "Rata-rata penjualan",
-      dataIndex: "averageSalesInMonth",
+      dataIndex: "averageSalesInYear",
       align: "center",
       width: "10%",
     },
@@ -123,31 +121,43 @@ const MinMaxTable = ({ barang, penjualan }) => {
       width: "10%",
     },
     {
-      title: "Maximum stock",
-      dataIndex: "maximumStock",
-      align: "center",
-      width: "10%",
-    },
-    {
       title: "Minimum stock",
       dataIndex: "minimumStock",
       align: "center",
       width: "10%",
     },
     {
-      title: "Reorder stock",
-      dataIndex: "reorderStock",
+      title: "Maximum stock",
+      dataIndex: "maximumStock",
+      align: "center",
+      width: "10%",
+    },
+    {
+      title: "Banyak pemesanan",
+      dataIndex: "orderQuantity",
+      align: "center",
+      width: "10%",
+    },
+    {
+      title: "Frekuensi pemesanan",
+      dataIndex: "frequency",
       align: "center",
       width: "10%",
     },
   ];
 
-  console.log(minMax);
+  const handleChange = () => {
+    const selectedDate = form.getFieldValue(["tanggal_mulai"]);
+    if (selectedDate !== null) {
+      form.setFieldValue(["tanggal_selesai"], dayjs(selectedDate, "DD-MM-YYYY").subtract(1, "year"));
+    }
+  };
 
   return (
     <div>
       <Form
         name="minmax_form"
+        form={form}
         wrapperCol={{
           span: 16,
         }}
@@ -165,7 +175,7 @@ const MinMaxTable = ({ barang, penjualan }) => {
         <div className="flex items-center">
           <Form.Item
             label="Tanggal"
-            name="tanggal"
+            name="tanggal_mulai"
             rules={[
               {
                 required: true,
@@ -173,7 +183,20 @@ const MinMaxTable = ({ barang, penjualan }) => {
               },
             ]}
           >
-            <DatePicker placeholder="Pilih tanggal" format={"MM-YYYY"} picker="month" />
+            <DatePicker placeholder="Pilih tanggal" format={"DD-MM-YYYY"} onChange={handleChange} />
+          </Form.Item>
+
+          <Form.Item
+            label="Sampai"
+            name="tanggal_selesai"
+            rules={[
+              {
+                required: true,
+                message: "Masukan tanggal!",
+              },
+            ]}
+          >
+            <DatePicker placeholder="Pilih tanggal" format={"DD-MM-YYYY"} disabled />
           </Form.Item>
 
           <Form.Item>
@@ -190,6 +213,10 @@ const MinMaxTable = ({ barang, penjualan }) => {
           columns={columns}
           dataSource={minMax}
           rowKey={"id"}
+          scroll={{
+            x: 1100,
+          }}
+          pagination={false}
         />
       </Form>
     </div>
