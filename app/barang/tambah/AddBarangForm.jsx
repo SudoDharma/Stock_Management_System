@@ -58,6 +58,12 @@ const AddBarangForm = () => {
     {
       value: "Bungkus",
     },
+    {
+      value: "Kaleng",
+    },
+    {
+      value: "Roll",
+    },
   ];
 
   return (

@@ -57,6 +57,12 @@ const EditBarangForm = ({ barang }) => {
     {
       value: "Bungkus",
     },
+    {
+      value: "Kaleng",
+    },
+    {
+      value: "Roll",
+    },
   ];
 
   return (
