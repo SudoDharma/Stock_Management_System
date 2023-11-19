@@ -60,6 +60,13 @@ const BarangTable = ({ barang }) => {
       render: (item, record, index) => <p>Rp. {record.harga.toLocaleString()}</p>,
     },
     {
+      title: "Harga pemesanan",
+      dataIndex: "hargaPemesanan",
+      align: "left",
+      width: "20%",
+      render: (item, record, index) => <p>Rp. {record.hargaPemesanan.toLocaleString()}</p>,
+    },
+    {
       title: "Aksi",
       align: "center",
       width: "20%",

@@ -11,15 +11,37 @@ const HomeTable = ({ penjualan }) => {
     },
     {
       title: "Barang yang dibeli",
-      dataIndex: "barang",
-      align: "left",
+      dataIndex: "",
+      align: "center",
       width: "50%",
-      render: (record) =>
-        record.map((items, idx) => (
-          <p key={idx}>
-            {items.nama_barang} {items.jumlah} {items.satuan}
-          </p>
-        )),
+      children: [
+        {
+          title: "Nama barang",
+          dataIndex: "barang",
+          align: "left",
+          width: "30%",
+          render: (record) =>
+            record.map((item, index) => (
+              <p key={index}>
+                {index + 1}. {item.nama_barang}
+              </p>
+            )),
+        },
+        {
+          title: "Jumlah",
+          dataIndex: "barang",
+          align: "right",
+          width: "10%",
+          render: (record) => record.map((item, index) => <p key={index}>{item.jumlah}</p>),
+        },
+        {
+          title: "Satuan",
+          dataIndex: "barang",
+          align: "left",
+          width: "10%",
+          render: (record) => record.map((item, index) => <p key={index}>{item.satuan}</p>),
+        },
+      ],
     },
   ];
   return (

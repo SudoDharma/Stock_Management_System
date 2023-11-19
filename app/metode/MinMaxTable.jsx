@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Table, message, Form, DatePicker, Empty } from "antd";
+import { Table, Form, DatePicker, Empty } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
 const MinMaxTable = ({ barang, penjualan }) => {
   const [minMax, setMinMax] = useState([]);
-  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
 
   const countMinMax = (nama_barang, tanggal_mulai, tanggal_selesai) => {
@@ -41,7 +40,7 @@ const MinMaxTable = ({ barang, penjualan }) => {
 
     const itemCost = barang.filter((item1) => item1.namaBarang === nama_barang).map((item2) => item2.harga);
     const orderCost = barang.filter((item1) => item1.namaBarang === nama_barang).map((item2) => item2.hargaPemesanan);
-    const H = Math.round(storageCost / totalSalesInYear);
+    const holdingCost = Math.round(storageCost / totalSalesInYear);
 
     const maximumSalesInYear = Math.max(...salesNumber);
     const averageSalesInYear = Math.round(totalSalesInYear / 12);
@@ -53,7 +52,7 @@ const MinMaxTable = ({ barang, penjualan }) => {
     const frequency = Math.round(totalSalesInYear / orderQuantity);
 
     const totalOrderCost = Math.round((totalSalesInYear * orderCost[0]) / orderQuantity);
-    const totalStorageCost = Math.round((orderQuantity * H) / 2);
+    const totalStorageCost = Math.round((orderQuantity * holdingCost) / 2);
     const totalCost = Math.round(totalSalesInYear * itemCost[0] + totalOrderCost + totalStorageCost);
 
     return {
@@ -68,7 +67,7 @@ const MinMaxTable = ({ barang, penjualan }) => {
       maximumStock: maximumStock,
       orderQuantity: orderQuantity,
       frequency: frequency,
-      H: H,
+      holdingCost: holdingCost,
       totalOrderCost: totalOrderCost,
       totalStorageCost: totalStorageCost,
       totalCost: totalCost,
@@ -95,110 +94,112 @@ const MinMaxTable = ({ barang, penjualan }) => {
   const columns = [
     {
       title: "No.",
-      width: "5%",
+      width: 75,
       align: "center",
       render: (item, record, index) => <p>{index + 1}</p>,
+      fixed: "left",
     },
     {
       title: "Nama barang",
       dataIndex: "namaBarang",
       align: "left",
-      width: "20%",
+      width: 150,
+      fixed: "left",
     },
     {
       title: "Harga barang",
       dataIndex: "harga",
       align: "center",
-      width: "10%",
+      width: 120,
       render: (item, record, index) => <p>Rp. {record.harga.toLocaleString()}</p>,
     },
     {
       title: "Biaya pemesanan",
       dataIndex: "orderCost",
       align: "center",
-      width: "10%",
+      width: 120,
       render: (item, record, index) => <p>Rp. {record.orderCost.toLocaleString()}</p>,
     },
     {
       title: "Total penjualan",
       dataIndex: "totalSalesInYear",
       align: "center",
-      width: "10%",
+      width: 120,
     },
     {
       title: "Penjualan maksimum",
       dataIndex: "maximumSalesInYear",
       align: "center",
-      width: "10%",
+      width: 120,
     },
     {
       title: "Rata-rata penjualan",
       dataIndex: "averageSalesInYear",
       align: "center",
-      width: "10%",
+      width: 120,
     },
     {
       title: "Lead time",
       dataIndex: "leadTime",
       align: "center",
-      width: "10%",
+      width: 120,
     },
     {
       title: "Safety stock",
       dataIndex: "safetyStock",
       align: "center",
-      width: "10%",
+      width: 120,
     },
     {
       title: "Minimum stock",
       dataIndex: "minimumStock",
       align: "center",
-      width: "10%",
+      width: 120,
     },
     {
       title: "Maximum stock",
       dataIndex: "maximumStock",
       align: "center",
-      width: "10%",
+      width: 120,
     },
     {
       title: "Jumlah pesanan",
       dataIndex: "orderQuantity",
       align: "center",
-      width: "10%",
+      width: 120,
     },
     {
       title: "Frekuensi pemesanan",
       dataIndex: "frequency",
       align: "center",
-      width: "10%",
+      width: 120,
     },
     {
       title: "Biaya penyimpanan(H)",
-      dataIndex: "H",
+      dataIndex: "holdingCost",
       align: "center",
-      width: "10%",
-      render: (item, record, index) => <p>{record.H.toLocaleString()}</p>,
+      width: 120,
+      render: (item, record, index) => <p>{record.holdingCost.toLocaleString()}</p>,
     },
     {
       title: "Total biaya pesan",
       dataIndex: "totalOrderCost",
       align: "center",
-      width: "10%",
+      width: 120,
       render: (item, record, index) => <p>Rp. {record.totalOrderCost.toLocaleString()}</p>,
     },
     {
       title: "Total biaya simpan",
       dataIndex: "totalStorageCost",
       align: "center",
-      width: "10%",
+      width: 120,
       render: (item, record, index) => <p>Rp. {record.totalStorageCost.toLocaleString()}</p>,
     },
     {
       title: "Total biaya",
       dataIndex: "totalCost",
       align: "center",
-      width: "10%",
+      width: 120,
       render: (item, record, index) => <p>Rp. {record.totalCost.toLocaleString()}</p>,
     },
   ];
@@ -264,6 +265,7 @@ const MinMaxTable = ({ barang, penjualan }) => {
               Pilih
             </button>
           </Form.Item>
+          <p className="ml-auto mr-0 mb-auto mt-0 font-semibold">Biaya penyimpanan: Rp.12,000,000</p>
         </div>
         <Table
           locale={{ emptyText: <Empty description={"Tidak ada data"} /> }}
@@ -272,6 +274,7 @@ const MinMaxTable = ({ barang, penjualan }) => {
           rowKey={"id"}
           scroll={{
             x: 1100,
+            y: "calc(100vh - 220px)",
           }}
           pagination={false}
         />

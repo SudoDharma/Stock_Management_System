@@ -42,17 +42,37 @@ const PenjualanTable = ({ penjualan }) => {
     },
     {
       title: "Barang yang dibeli",
-      dataIndex: "barang",
+      dataIndex: "",
       align: "center",
       width: "50%",
-      render: (record) =>
-        record.map((item) => (
-          <div className="flex gap-2 font-semibold border-b-2 border-gray-200">
-            <p>{item.nama_barang}</p>
-            <p>{item.jumlah}</p>
-            <p>{item.satuan}</p>
-          </div>
-        )),
+      children: [
+        {
+          title: "Nama barang",
+          dataIndex: "barang",
+          align: "left",
+          width: "30%",
+          render: (record) =>
+            record.map((item, index) => (
+              <p key={index}>
+                {index + 1}. {item.nama_barang}
+              </p>
+            )),
+        },
+        {
+          title: "Jumlah",
+          dataIndex: "barang",
+          align: "right",
+          width: "10%",
+          render: (record) => record.map((item, index) => <p key={index}>{item.jumlah}</p>),
+        },
+        {
+          title: "Satuan",
+          dataIndex: "barang",
+          align: "left",
+          width: "10%",
+          render: (record) => record.map((item, index) => <p key={index}>{item.satuan}</p>),
+        },
+      ],
     },
     {
       title: "Aksi",

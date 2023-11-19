@@ -3,15 +3,27 @@ import { Suspense } from "react";
 import PemesananTable from "./PemesananTable";
 import Link from "next/link";
 
-const getPemesanan = async () => {
-  const prisma = new PrismaClient();
-  const res = await prisma.pemesanan.findMany();
+const prisma = new PrismaClient();
+
+const getPemesananTrue = async () => {
+  const res = await prisma.pemesanan.findMany({
+    where: { status: true },
+  });
+
+  return res;
+};
+
+const getPemesananFalse = async () => {
+  const res = await prisma.pemesanan.findMany({
+    where: { status: false },
+  });
 
   return res;
 };
 
 const PemesananPage = async () => {
-  const pemesanan = await getPemesanan();
+  const pemesananTrue = await getPemesananTrue();
+  const pemesananFalse = await getPemesananFalse();
 
   return (
     <div>
@@ -26,7 +38,17 @@ const PemesananPage = async () => {
           </button>
         </Link>
         <Suspense>
-          <PemesananTable pemesanan={pemesanan} />
+          <div className="my-3">
+            <p className="my-3 font-medium">Pemesanan belum sampai</p>
+            <PemesananTable pemesanan={pemesananFalse} />
+          </div>
+        </Suspense>
+
+        <Suspense>
+          <div className="my-3">
+            <p className="my-3 font-medium">Pemesanan sudah sampai</p>
+            <PemesananTable pemesanan={pemesananTrue} />
+          </div>
         </Suspense>
       </div>
     </div>
