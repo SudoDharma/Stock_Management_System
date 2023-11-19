@@ -13,8 +13,9 @@ const MinMaxTable = ({ barang, penjualan }) => {
 
   const countMinMax = (nama_barang, tanggal_mulai, tanggal_selesai) => {
     const leadTime = 0.23; // 7 divided by 30
-    const itemSales = [];
+    const storageCost = 12000000;
 
+    const itemSales = [];
     const penjualanTahun = penjualan.filter((item) => {
       return (
         dayjs(item.tanggal, "DD-MM-YYYY").isBefore(dayjs(tanggal_mulai, "DD-MM-YYYY")) &&
@@ -37,8 +38,12 @@ const MinMaxTable = ({ barang, penjualan }) => {
     const totalSalesInYear = salesNumber.reduce((accumulator, currentValue) => {
       return accumulator + currentValue;
     });
-    const maximumSalesInYear = Math.max(...salesNumber);
 
+    const itemCost = barang.filter((item1) => item1.namaBarang === nama_barang).map((item2) => item2.harga);
+    const orderCost = barang.filter((item1) => item1.namaBarang === nama_barang).map((item2) => item2.hargaPemesanan);
+    const H = Math.round(storageCost / totalSalesInYear);
+
+    const maximumSalesInYear = Math.max(...salesNumber);
     const averageSalesInYear = Math.round(totalSalesInYear / 12);
 
     const safetyStock = Math.ceil((maximumSalesInYear - averageSalesInYear) * leadTime);
@@ -47,8 +52,14 @@ const MinMaxTable = ({ barang, penjualan }) => {
     const orderQuantity = Math.round(2 * averageSalesInYear * leadTime);
     const frequency = Math.round(totalSalesInYear / orderQuantity);
 
+    const totalOrderCost = Math.round((totalSalesInYear * orderCost[0]) / orderQuantity);
+    const totalStorageCost = Math.round((orderQuantity * H) / 2);
+    const totalCost = Math.round(totalSalesInYear * itemCost[0] + totalOrderCost + totalStorageCost);
+
     return {
       leadTime: leadTime.toFixed(2),
+      itemCost: itemCost[0],
+      orderCost: orderCost[0],
       totalSalesInYear: totalSalesInYear,
       maximumSalesInYear: maximumSalesInYear,
       averageSalesInYear: averageSalesInYear,
@@ -57,6 +68,10 @@ const MinMaxTable = ({ barang, penjualan }) => {
       maximumStock: maximumStock,
       orderQuantity: orderQuantity,
       frequency: frequency,
+      H: H,
+      totalOrderCost: totalOrderCost,
+      totalStorageCost: totalStorageCost,
+      totalCost: totalCost,
     };
   };
 
@@ -89,6 +104,20 @@ const MinMaxTable = ({ barang, penjualan }) => {
       dataIndex: "namaBarang",
       align: "left",
       width: "20%",
+    },
+    {
+      title: "Harga barang",
+      dataIndex: "harga",
+      align: "center",
+      width: "10%",
+      render: (item, record, index) => <p>Rp. {record.harga.toLocaleString()}</p>,
+    },
+    {
+      title: "Biaya pemesanan",
+      dataIndex: "orderCost",
+      align: "center",
+      width: "10%",
+      render: (item, record, index) => <p>Rp. {record.orderCost.toLocaleString()}</p>,
     },
     {
       title: "Total penjualan",
@@ -133,7 +162,7 @@ const MinMaxTable = ({ barang, penjualan }) => {
       width: "10%",
     },
     {
-      title: "Banyak pemesanan",
+      title: "Jumlah pesanan",
       dataIndex: "orderQuantity",
       align: "center",
       width: "10%",
@@ -143,6 +172,34 @@ const MinMaxTable = ({ barang, penjualan }) => {
       dataIndex: "frequency",
       align: "center",
       width: "10%",
+    },
+    {
+      title: "Biaya penyimpanan(H)",
+      dataIndex: "H",
+      align: "center",
+      width: "10%",
+      render: (item, record, index) => <p>{record.H.toLocaleString()}</p>,
+    },
+    {
+      title: "Total biaya pesan",
+      dataIndex: "totalOrderCost",
+      align: "center",
+      width: "10%",
+      render: (item, record, index) => <p>Rp. {record.totalOrderCost.toLocaleString()}</p>,
+    },
+    {
+      title: "Total biaya simpan",
+      dataIndex: "totalStorageCost",
+      align: "center",
+      width: "10%",
+      render: (item, record, index) => <p>Rp. {record.totalStorageCost.toLocaleString()}</p>,
+    },
+    {
+      title: "Total biaya",
+      dataIndex: "totalCost",
+      align: "center",
+      width: "10%",
+      render: (item, record, index) => <p>Rp. {record.totalCost.toLocaleString()}</p>,
     },
   ];
 

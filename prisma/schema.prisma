@@ -17,6 +17,7 @@ model Barang{
   stok Int
   satuan String
   harga Int @default(0)
+  hargaPemesanan Int @default(0)
 }
 
 model Penjualan{

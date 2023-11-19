@@ -2,17 +2,16 @@
 
 import { useState } from "react";
 import { Table, message, Form, DatePicker, Empty } from "antd";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
-const EOQTable = ({ barang, penjualan }) => {
-  const [EOQ, setEOQ] = useState([]);
+const NormalTable = ({ barang, penjualan, pemesanan }) => {
+  const [data, setData] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
 
-  const countEOQ = (nama_barang, tanggal_mulai, tanggal_selesai) => {
-    const leadTime = 7;
+  const countData = (nama_barang, tanggal_mulai, tanggal_selesai) => {
     const storageCost = 12000000;
 
     const itemSales = [];
@@ -39,34 +38,46 @@ const EOQTable = ({ barang, penjualan }) => {
       return accumulator + currentValue;
     });
 
+    const itemOrder = [];
+    const pemesananTahun = pemesanan.filter((item) => {
+      return (
+        dayjs(item.tanggal, "DD-MM-YYYY").isBefore(dayjs(tanggal_mulai, "DD-MM-YYYY")) &&
+        dayjs(item.tanggal, "DD-MM-YYYY").isAfter(dayjs(tanggal_selesai, "DD-MM-YYYY"))
+      );
+    });
+
+    pemesananTahun.map((item) => {
+      if (item.barang === nama_barang) {
+        itemOrder.push(item);
+      }
+    });
+
+    const orderNumber = itemOrder.map((item) => {
+      return item.jumlah;
+    });
+
+    const totalOrderInYear = orderNumber.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    });
+
     const itemCost = barang.filter((item1) => item1.namaBarang === nama_barang).map((item2) => item2.harga);
     const orderCost = barang.filter((item1) => item1.namaBarang === nama_barang).map((item2) => item2.hargaPemesanan);
     const H = Math.round(storageCost / totalSalesInYear);
 
-    const EOQ = Math.round(Math.sqrt((2 * totalSalesInYear * orderCost[0]) / H));
+    const orderQuantity = Math.round(totalOrderInYear / 12);
+    const frequency = itemOrder.length;
 
-    const frequency = Math.round(totalSalesInYear / EOQ);
-
-    const maximumSalesInYear = Math.max(...salesNumber);
-    const averageSalesInYear = Math.round(totalSalesInYear / 12);
-    const safetyStock = Math.ceil((maximumSalesInYear / 26 - averageSalesInYear / 26) * leadTime);
-
-    const reorderPoint = Math.ceil((totalSalesInYear / 360) * leadTime);
-
-    const totalOrderCost = Math.round((totalSalesInYear * orderCost[0]) / EOQ);
-    const totalStorageCost = Math.round((EOQ * H) / 2);
+    const totalOrderCost = Math.round((totalSalesInYear * orderCost[0]) / orderQuantity);
+    const totalStorageCost = Math.round((orderQuantity * H) / 2);
     const totalCost = Math.round(totalSalesInYear * itemCost[0] + totalOrderCost + totalStorageCost);
 
     return {
-      totalSalesInYear: totalSalesInYear,
       itemCost: itemCost[0],
-      H: H,
-      EOQ: EOQ,
-      frequency: frequency,
-      leadTime: leadTime,
-      reorderPoint: reorderPoint,
-      safetyStock: safetyStock,
       orderCost: orderCost[0],
+      totalSalesInYear: totalSalesInYear,
+      orderQuantity: orderQuantity,
+      frequency: frequency,
+      H: H,
       totalOrderCost: totalOrderCost,
       totalStorageCost: totalStorageCost,
       totalCost: totalCost,
@@ -76,25 +87,18 @@ const EOQTable = ({ barang, penjualan }) => {
   const onFinish = (values) => {
     const tanggal_mulai = dayjs(values.tanggal_mulai, "DD-MM-YYYY");
     const tanggal_selesai = dayjs(values.tanggal_selesai, "DD-MM-YYYY");
-    const EOQBarang = [];
+    const dataBarang = [];
 
     barang.map((item) => {
-      const EOQValues = countEOQ(item.namaBarang, tanggal_mulai, tanggal_selesai);
-      EOQBarang.push({ ...EOQValues, ...item });
+      const dataValues = countData(item.namaBarang, tanggal_mulai, tanggal_selesai);
+      dataBarang.push({ ...dataValues, ...item });
     });
 
-    setEOQ(EOQBarang);
+    setData(dataBarang);
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("errorInfo", errorInfo);
-  };
-
-  const handleChange = () => {
-    const selectedDate = form.getFieldValue(["tanggal_mulai"]);
-    if (selectedDate !== null) {
-      form.setFieldValue(["tanggal_selesai"], dayjs(selectedDate, "DD-MM-YYYY").subtract(1, "year"));
-    }
   };
 
   const columns = [
@@ -131,15 +135,8 @@ const EOQTable = ({ barang, penjualan }) => {
       width: "10%",
     },
     {
-      title: "Biaya penyimpanan(H)",
-      dataIndex: "H",
-      align: "center",
-      width: "10%",
-      render: (item, record, index) => <p>{record.H.toLocaleString()}</p>,
-    },
-    {
-      title: "EOQ",
-      dataIndex: "EOQ",
+      title: "Jumlah pesanan",
+      dataIndex: "orderQuantity",
       align: "center",
       width: "10%",
     },
@@ -150,22 +147,11 @@ const EOQTable = ({ barang, penjualan }) => {
       width: "10%",
     },
     {
-      title: "Lead time",
-      dataIndex: "leadTime",
+      title: "Biaya penyimpanan(H)",
+      dataIndex: "H",
       align: "center",
       width: "10%",
-    },
-    {
-      title: "Safety stock",
-      dataIndex: "safetyStock",
-      align: "center",
-      width: "10%",
-    },
-    {
-      title: "Reorder point",
-      dataIndex: "reorderPoint",
-      align: "center",
-      width: "10%",
+      render: (item, record, index) => <p>{record.H.toLocaleString()}</p>,
     },
     {
       title: "Total biaya pesan",
@@ -190,10 +176,17 @@ const EOQTable = ({ barang, penjualan }) => {
     },
   ];
 
+  const handleChange = () => {
+    const selectedDate = form.getFieldValue(["tanggal_mulai"]);
+    if (selectedDate !== null) {
+      form.setFieldValue(["tanggal_selesai"], dayjs(selectedDate, "DD-MM-YYYY").subtract(1, "year"));
+    }
+  };
+
   return (
     <div>
       <Form
-        name="eoq_form"
+        name="normal_form"
         form={form}
         wrapperCol={{
           span: 16,
@@ -244,12 +237,11 @@ const EOQTable = ({ barang, penjualan }) => {
               Pilih
             </button>
           </Form.Item>
-          <p className="ml-auto mr-0 mb-auto mt-0 font-semibold">Biaya penyimpanan: Rp.12,000,000</p>
         </div>
         <Table
           locale={{ emptyText: <Empty description={"Tidak ada data"} /> }}
           columns={columns}
-          dataSource={EOQ}
+          dataSource={data}
           rowKey={"id"}
           scroll={{
             x: 1100,
@@ -261,4 +253,4 @@ const EOQTable = ({ barang, penjualan }) => {
   );
 };
 
-export default EOQTable;
+export default NormalTable;

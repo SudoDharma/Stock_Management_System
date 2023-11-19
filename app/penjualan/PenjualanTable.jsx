@@ -43,13 +43,15 @@ const PenjualanTable = ({ penjualan }) => {
     {
       title: "Barang yang dibeli",
       dataIndex: "barang",
-      align: "left",
+      align: "center",
       width: "50%",
       render: (record) =>
-        record.map((items, idx) => (
-          <p key={idx}>
-            {items.nama_barang} {items.jumlah} {items.satuan}
-          </p>
+        record.map((item) => (
+          <div className="flex gap-2 font-semibold border-b-2 border-gray-200">
+            <p>{item.nama_barang}</p>
+            <p>{item.jumlah}</p>
+            <p>{item.satuan}</p>
+          </div>
         )),
     },
     {

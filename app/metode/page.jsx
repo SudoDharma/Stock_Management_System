@@ -1,5 +1,6 @@
 import MinMaxTable from "./MinMaxTable";
 import EOQTable from "./EOQTable";
+import NormalTable from "./NormalTable";
 import { PrismaClient } from "@prisma/client";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
@@ -26,6 +27,7 @@ const getPenjualan = async () => {
 const MetodePage = async () => {
   const barang = await getBarang();
   const penjualan = await getPenjualan();
+  const pemesanan = await getPemesanan();
 
   const newPenjualan = [];
 
@@ -50,6 +52,11 @@ const MetodePage = async () => {
       label: "Metode EOQ",
       children: <EOQTable barang={barang} penjualan={newPenjualan} />,
     },
+    {
+      key: "3",
+      label: "Metode biasa",
+      children: <NormalTable barang={barang} penjualan={newPenjualan} pemesanan={pemesanan} />,
+    },
   ];
 
   return (
@@ -59,7 +66,7 @@ const MetodePage = async () => {
 
       <div className="px-10 py-5">
         <div className="p-5 bg-white rounded-md shadow-md">
-          <Tabs defaultActiveKey="1" items={items} />
+          <Tabs defaultActiveKey="1" items={items} type="card" animated={true} />
         </div>
       </div>
     </div>
