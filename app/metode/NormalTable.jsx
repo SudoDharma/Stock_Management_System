@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
-const NormalTable = ({ barang, penjualan, pemesanan }) => {
+const NormalTable = ({ barang, penjualan, pemesanan, comparisonData, setComparisonData }) => {
   const [data, setData] = useState([]);
   const [form] = Form.useForm();
 
@@ -94,6 +94,10 @@ const NormalTable = ({ barang, penjualan, pemesanan }) => {
     });
 
     setData(dataBarang);
+
+    const newComparisonData = { ...comparisonData };
+    newComparisonData.normal = [...dataBarang];
+    setComparisonData(newComparisonData);
   };
 
   const onFinishFailed = (errorInfo) => {

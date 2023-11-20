@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
-const MinMaxTable = ({ barang, penjualan }) => {
+const MinMaxTable = ({ barang, penjualan, comparisonData, setComparisonData }) => {
   const [minMax, setMinMax] = useState([]);
   const [form] = Form.useForm();
 
@@ -47,13 +47,13 @@ const MinMaxTable = ({ barang, penjualan }) => {
 
     const safetyStock = Math.ceil((maximumSalesInYear - averageSalesInYear) * leadTime);
     const minimumStock = Math.ceil(averageSalesInYear * leadTime + safetyStock);
-    const maximumStock = Math.round(2 * (averageSalesInYear * leadTime) + safetyStock);
-    const orderQuantity = Math.round(2 * averageSalesInYear * leadTime);
-    const frequency = Math.round(totalSalesInYear / orderQuantity);
+    const maximumStock = Math.ceil(2 * (averageSalesInYear * leadTime) + safetyStock);
+    const orderQuantity = Math.ceil(2 * averageSalesInYear * leadTime);
+    const frequency = Math.ceil(totalSalesInYear / orderQuantity);
 
-    const totalOrderCost = Math.round((totalSalesInYear * orderCost[0]) / orderQuantity);
-    const totalStorageCost = Math.round((orderQuantity * holdingCost) / 2);
-    const totalCost = Math.round(totalSalesInYear * itemCost[0] + totalOrderCost + totalStorageCost);
+    const totalOrderCost = Math.ceil((totalSalesInYear * orderCost[0]) / orderQuantity);
+    const totalStorageCost = Math.ceil((orderQuantity * holdingCost) / 2);
+    const totalCost = Math.ceil(totalSalesInYear * itemCost[0] + totalOrderCost + totalStorageCost);
 
     return {
       leadTime: leadTime.toFixed(2),
@@ -85,6 +85,10 @@ const MinMaxTable = ({ barang, penjualan }) => {
     });
 
     setMinMax(minMaxBarang);
+
+    const newComparisonData = { ...comparisonData };
+    newComparisonData.minMax = [...minMaxBarang];
+    setComparisonData(newComparisonData);
   };
 
   const onFinishFailed = (errorInfo) => {

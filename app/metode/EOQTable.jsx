@@ -6,7 +6,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
 dayjs.extend(customParseFormat);
 
-const EOQTable = ({ barang, penjualan }) => {
+const EOQTable = ({ barang, penjualan, comparisonData, setComparisonData }) => {
   const [EOQ, setEOQ] = useState([]);
   const [form] = Form.useForm();
 
@@ -83,6 +83,10 @@ const EOQTable = ({ barang, penjualan }) => {
     });
 
     setEOQ(EOQBarang);
+
+    const newComparisonData = { ...comparisonData };
+    newComparisonData.EOQ = [...EOQBarang];
+    setComparisonData(newComparisonData);
   };
 
   const onFinishFailed = (errorInfo) => {
