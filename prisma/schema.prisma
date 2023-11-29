@@ -35,3 +35,10 @@ model Pemesanan{
   jumlah Int
   status Boolean @default(false)
 }
+
+model User{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  username String @unique
+  password String
+}

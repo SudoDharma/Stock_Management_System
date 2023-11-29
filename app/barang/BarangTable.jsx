@@ -9,12 +9,6 @@ const BarangTable = ({ barang }) => {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const [messageApi, contextHolder] = message.useMessage();
-  const success = () => {
-    messageApi.open({
-      type: "success",
-      content: "This is a success message",
-    });
-  };
 
   const confirmDelete = async (id) => {
     setDeleteLoading(true);
@@ -23,7 +17,10 @@ const BarangTable = ({ barang }) => {
     });
 
     setDeleteLoading(false);
-    success();
+    messageApi.open({
+      type: "success",
+      content: "Data dihapus",
+    });
     router.refresh();
   };
 

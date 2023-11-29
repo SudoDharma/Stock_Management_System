@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { PrismaClient } from "@prisma/client";
 import { Suspense } from "react";
 import { IconPackage, IconShoppingCart, IconCirclePlus, IconTruckDelivery } from "@tabler/icons-react";
@@ -25,7 +27,15 @@ const getPemesanan = async () => {
   return res;
 };
 
+const isLoggedIn = async () => {
+  const status = cookies().get("status");
+  if (status === undefined) {
+    redirect("/login");
+  }
+};
+
 const Home = async () => {
+  await isLoggedIn();
   const penjualan = await getPenjualan();
   const barang = await getBarang();
   const pemesanan = await getPemesanan();
@@ -53,7 +63,7 @@ const Home = async () => {
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
       <div className="px-10 py-5">
-        <p className="font-medium">Home</p>
+        <p className="font-medium mb-3">Home</p>
         <div className="mb-10 w-full h-[150px] flex justify-between bg-white rounded-md shadow-md">
           <HomeCard
             icon={

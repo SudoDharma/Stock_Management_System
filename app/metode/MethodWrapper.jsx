@@ -65,6 +65,7 @@ const MethodWrapper = ({ barang, penjualan, pemesanan }) => {
 
   return (
     <div className="px-10 py-5">
+      <p className="font-medium mb-3">Metode</p>
       <div className="p-5 bg-white rounded-md shadow-md">
         <Tabs defaultActiveKey="1" items={items} type="card" animated={true} />
       </div>

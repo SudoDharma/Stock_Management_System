@@ -55,93 +55,91 @@ const AddPemesananForm = ({ barang }) => {
   };
 
   return (
-    <Form
-      name="basic"
-      labelCol={{
-        span: 8,
-      }}
-      wrapperCol={{
-        span: 16,
-      }}
-      style={{
-        maxWidth: 600,
-      }}
-      initialValues={{
-        remember: true,
-      }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-      disabled={loading}
-      requiredMark={false}
-    >
-      <Form.Item
-        label="Tanggal"
-        name="tanggal"
-        rules={[
-          {
-            required: true,
-            message: "Masukan tanggal!",
-          },
-        ]}
-      >
-        <DatePicker placeholder="Pilih tanggal" format={"DD-MM-YYYY"} />
-      </Form.Item>
-
-      <Form.Item
-        label="Barang"
-        name="barang"
-        rules={[
-          {
-            required: true,
-            message: "Pilih barang!",
-          },
-        ]}
-      >
-        <Select
-          placeholder={"Pilih barang yang dipesan"}
-          allowClear
-          showSearch
-          options={selectOption}
-          filterSort={(optionA, optionB) =>
-            (optionA?.value ?? "").toLowerCase().localeCompare((optionB?.value ?? "").toLowerCase())
-          }
-        />
-      </Form.Item>
-
-      <Form.Item
-        label="Jumlah"
-        name="jumlah"
-        rules={[
-          {
-            required: true,
-            message: "Masukan jumlah barang!",
-          },
-        ]}
-      >
-        <InputNumber />
-      </Form.Item>
-
-      <Form.Item
-        wrapperCol={{
-          offset: 8,
-          span: 16,
+    <div>
+      <p className="font-medium mb-3">Tambah data</p>
+      <Form
+        name="basic"
+        className="p-5 mb-5 font-semibold bg-[#EEF5FF] border-black rounded-md shadow-md"
+        labelCol={{
+          span: 4,
         }}
+        labelAlign="left"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+        disabled={loading}
+        requiredMark={false}
       >
-        <button
-          type="submit"
-          className="h-[35px] w-[120px] bg-indigo-500 text-white font-medium rounded-md hover:opacity-70 transition-all shadow-md"
-          disabled={loading}
+        <Form.Item
+          label="Tanggal"
+          name="tanggal"
+          rules={[
+            {
+              required: true,
+              message: "Masukan tanggal!",
+            },
+          ]}
         >
-          {loading && (
-            <div>
-              <ButtonSpinner />
-            </div>
-          )}
-          {!loading && <div>Tambah</div>}
-        </button>
-      </Form.Item>
-    </Form>
+          <DatePicker placeholder="Pilih tanggal" format={"DD-MM-YYYY"} />
+        </Form.Item>
+
+        <Form.Item
+          label="Barang"
+          name="barang"
+          rules={[
+            {
+              required: true,
+              message: "Pilih barang!",
+            },
+          ]}
+        >
+          <Select
+            placeholder={"Pilih barang yang dipesan"}
+            allowClear
+            showSearch
+            options={selectOption}
+            filterSort={(optionA, optionB) =>
+              (optionA?.value ?? "").toLowerCase().localeCompare((optionB?.value ?? "").toLowerCase())
+            }
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Jumlah"
+          name="jumlah"
+          rules={[
+            {
+              required: true,
+              message: "Masukan jumlah barang!",
+            },
+          ]}
+        >
+          <InputNumber placeholder="0" />
+        </Form.Item>
+
+        <Form.Item
+          wrapperCol={{
+            offset: 21,
+          }}
+        >
+          <button
+            type="submit"
+            className="h-[35px] w-[100px] bg-indigo-500 text-white font-medium rounded-md hover:opacity-70 transition-all shadow-md"
+            disabled={loading}
+          >
+            {loading && (
+              <div>
+                <ButtonSpinner />
+              </div>
+            )}
+            {!loading && <div>Tambah</div>}
+          </button>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 

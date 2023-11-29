@@ -20,9 +20,8 @@ const EditBarangPage = async ({ params }) => {
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
       <div className="px-10 py-5">
-        <p className="font-medium">Edit barang</p>
         <Suspense>
-          <div className="p-10 bg-white rounded-md shadow-md">
+          <div className="px-10 py-5 bg-white rounded-md shadow-md">
             <EditBarangForm barang={barang} />
           </div>
         </Suspense>

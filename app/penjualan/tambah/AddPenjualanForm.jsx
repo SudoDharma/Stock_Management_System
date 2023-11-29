@@ -163,19 +163,15 @@ const AddPenjualanForm = ({ barang }) => {
   return (
     <div>
       {contextHolder}
+      <p className="font-medium mb-3">Tambah data</p>
       <Form
         form={form}
         name="barang_form"
-        className="p-5 mb-5 bg-gray-200 border-black rounded-md shadow-md"
+        className="p-5 mb-5 font-semibold bg-[#EEF5FF] border-black rounded-md shadow-md"
         labelCol={{
-          span: 8,
+          span: 4,
         }}
-        wrapperCol={{
-          span: 16,
-        }}
-        style={{
-          maxWidth: 600,
-        }}
+        labelAlign="left"
         initialValues={{
           remember: true,
         }}
@@ -216,18 +212,17 @@ const AddPenjualanForm = ({ barang }) => {
             },
           ]}
         >
-          <InputNumber />
+          <InputNumber placeholder="0" />
         </Form.Item>
 
         <Form.Item
           wrapperCol={{
-            offset: 8,
-            span: 16,
+            offset: 21,
           }}
         >
           <button
             type="submit"
-            className="h-[35px] w-[120px] bg-indigo-500 text-white font-medium rounded-md hover:opacity-70 transition-all shadow-md"
+            className="h-[35px] w-[100px] bg-indigo-500 text-white font-medium rounded-md hover:opacity-70 transition-all shadow-md"
             disabled={loading}
           >
             {loading && (
@@ -242,16 +237,11 @@ const AddPenjualanForm = ({ barang }) => {
 
       <Form
         name="penjualan_form"
-        className="p-5 bg-gray-200 border-black rounded-md shadow-md"
+        className="p-5 mb-5 font-semibold bg-[#EEF5FF] border-black rounded-md shadow-md"
         labelCol={{
-          span: 8,
+          span: 4,
         }}
-        wrapperCol={{
-          span: 16,
-        }}
-        style={{
-          maxWidth: 600,
-        }}
+        labelAlign="left"
         initialValues={{
           remember: true,
         }}
@@ -288,13 +278,12 @@ const AddPenjualanForm = ({ barang }) => {
 
         <Form.Item
           wrapperCol={{
-            offset: 8,
-            span: 16,
+            offset: 21,
           }}
         >
           <button
             type="submit"
-            className="h-[35px] w-[120px] bg-indigo-500 text-white font-medium rounded-md hover:opacity-70 transition-all shadow-md"
+            className="h-[35px] w-[100px] bg-indigo-500 text-white font-medium rounded-md hover:opacity-70 transition-all shadow-md"
             disabled={loading}
           >
             {loading && (

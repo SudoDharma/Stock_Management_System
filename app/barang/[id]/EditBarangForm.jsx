@@ -66,108 +66,107 @@ const EditBarangForm = ({ barang }) => {
   ];
 
   return (
-    <Form
-      name="basic"
-      labelCol={{
-        span: 8,
-      }}
-      wrapperCol={{
-        span: 16,
-      }}
-      style={{
-        maxWidth: 600,
-      }}
-      initialValues={{
-        remember: true,
-      }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-      disabled={loading}
-      requiredMark={false}
-    >
-      <Form.Item
-        label="Nama barang"
-        name="namaBarang"
-        rules={[
-          {
-            required: true,
-            message: "Masukan nama barang!",
-          },
-        ]}
-        initialValue={barang.namaBarang}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label="Stok"
-        name="stok"
-        rules={[
-          {
-            required: true,
-            message: "Masukan jumlah stok!",
-          },
-        ]}
-        initialValue={barang.stok}
-      >
-        <InputNumber />
-      </Form.Item>
-
-      <Form.Item
-        label="Satuan"
-        name="satuan"
-        rules={[
-          {
-            required: true,
-            message: "Pilih satuan barang!",
-          },
-        ]}
-        initialValue={barang.satuan}
-      >
-        <Select
-          showSearch
-          filterSort={(optionA, optionB) =>
-            (optionA?.value ?? "").toLowerCase().localeCompare((optionB?.value ?? "").toLowerCase())
-          }
-          options={selectOption}
-        />
-      </Form.Item>
-
-      <Form.Item
-        label="Harga"
-        name="harga"
-        rules={[
-          {
-            required: true,
-            message: "Masukan harga!",
-          },
-        ]}
-        initialValue={barang.harga}
-      >
-        <InputNumber />
-      </Form.Item>
-
-      <Form.Item
-        wrapperCol={{
-          offset: 8,
-          span: 16,
+    <div>
+      <p className="font-medium mb-3">Edit barang</p>
+      <Form
+        name="basic"
+        className="p-5 mb-5 font-semibold bg-[#EEF5FF] border-black rounded-md shadow-md"
+        labelCol={{
+          span: 4,
         }}
+        labelAlign="left"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+        disabled={loading}
+        requiredMark={false}
       >
-        <button
-          type="submit"
-          className="h-[35px] w-[120px] bg-indigo-500 text-white font-medium rounded-md hover:opacity-70 transition-all shadow-md"
-          disabled={loading}
+        <Form.Item
+          label="Nama barang"
+          name="namaBarang"
+          rules={[
+            {
+              required: true,
+              message: "Masukan nama barang!",
+            },
+          ]}
+          initialValue={barang.namaBarang}
         >
-          {loading && (
-            <div>
-              <ButtonSpinner />
-            </div>
-          )}
-          {!loading && <div>Simpan</div>}
-        </button>
-      </Form.Item>
-    </Form>
+          <Input placeholder="Masukan nama barang" />
+        </Form.Item>
+
+        <Form.Item
+          label="Stok"
+          name="stok"
+          rules={[
+            {
+              required: true,
+              message: "Masukan jumlah stok!",
+            },
+          ]}
+          initialValue={barang.stok}
+        >
+          <InputNumber placeholder="0" />
+        </Form.Item>
+
+        <Form.Item
+          label="Satuan"
+          name="satuan"
+          rules={[
+            {
+              required: true,
+              message: "Pilih satuan barang!",
+            },
+          ]}
+          initialValue={barang.satuan}
+        >
+          <Select
+            showSearch
+            filterSort={(optionA, optionB) =>
+              (optionA?.value ?? "").toLowerCase().localeCompare((optionB?.value ?? "").toLowerCase())
+            }
+            options={selectOption}
+            placeholder={"Pilih satuan barang"}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Harga"
+          name="harga"
+          rules={[
+            {
+              required: true,
+              message: "Masukan harga!",
+            },
+          ]}
+          initialValue={barang.harga}
+        >
+          <InputNumber placeholder="20000" />
+        </Form.Item>
+
+        <Form.Item
+          wrapperCol={{
+            offset: 21,
+          }}
+        >
+          <button
+            type="submit"
+            className="h-[35px] w-[100px] bg-indigo-500 text-white font-medium rounded-md hover:opacity-70 transition-all shadow-md"
+            disabled={loading}
+          >
+            {loading && (
+              <div>
+                <ButtonSpinner />
+              </div>
+            )}
+            {!loading && <div>Simpan</div>}
+          </button>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 

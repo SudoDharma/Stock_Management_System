@@ -50,7 +50,7 @@ const EOQTable = ({ barang, penjualan, comparisonData, setComparisonData }) => {
     const averageSalesInYear = Math.round(totalSalesInYear / 12);
     const safetyStock = Math.ceil((maximumSalesInYear / 26 - averageSalesInYear / 26) * leadTime);
 
-    const reorderPoint = Math.ceil((totalSalesInYear / 360) * leadTime);
+    const reorderPoint = Math.ceil((averageSalesInYear / 26) * leadTime + safetyStock);
 
     const totalOrderCost = Math.round((totalSalesInYear * orderCost[0]) / EOQ);
     const totalStorageCost = Math.round((EOQ * holdingCost) / 2);

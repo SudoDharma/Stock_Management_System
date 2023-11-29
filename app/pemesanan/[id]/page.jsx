@@ -26,8 +26,7 @@ const EditPemesananPage = async ({ params }) => {
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
       <div className="px-10 py-5">
-        <p className="font-medium">Edit data</p>
-        <div className="p-10 bg-white rounded-md shadow-md">
+        <div className="px-10 py-5 bg-white rounded-md shadow-md">
           <Suspense>
             <EditPemesananForm pemesanan={pemesanan} barang={barang} />
           </Suspense>
