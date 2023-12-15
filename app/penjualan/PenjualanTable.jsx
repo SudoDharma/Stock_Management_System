@@ -12,7 +12,7 @@ const PenjualanTable = ({ penjualan }) => {
   const success = () => {
     messageApi.open({
       type: "success",
-      content: "This is a success message",
+      content: "Berhasil menghapus data",
     });
   };
 

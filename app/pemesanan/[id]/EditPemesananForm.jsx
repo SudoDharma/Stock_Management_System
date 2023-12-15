@@ -11,16 +11,8 @@ const EditPemesananForm = ({ pemesanan, barang }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectOption, setSelectOption] = useState([]);
-
+  const [satuan, setSatuan] = useState("");
   const { confirm } = Modal;
-
-  useEffect(() => {
-    const newSelectOption = [];
-    barang.map((barang) => {
-      newSelectOption.push({ value: barang.namaBarang });
-    });
-    setSelectOption(newSelectOption);
-  }, []);
 
   const checkSatuan = (nama) => {
     const satuan = barang.filter((items) => {
@@ -29,6 +21,22 @@ const EditPemesananForm = ({ pemesanan, barang }) => {
 
     return satuan[0].satuan;
   };
+
+  const handleChangeSelect = (e) => {
+    const newSatuan = checkSatuan(e);
+    setSatuan(newSatuan);
+  };
+
+  useEffect(() => {
+    const newSelectOption = [];
+    barang.map((barang) => {
+      newSelectOption.push({ value: barang.namaBarang });
+    });
+    setSelectOption(newSelectOption);
+
+    const newSatuan = checkSatuan(pemesanan.barang);
+    setSatuan(newSatuan);
+  }, []);
 
   const onFinish = (values) => {
     const newValues = { ...values, tanggal: values.tanggal.format("DD-MM-YYYY") };
@@ -129,6 +137,9 @@ const EditPemesananForm = ({ pemesanan, barang }) => {
             filterSort={(optionA, optionB) =>
               (optionA?.value ?? "").toLowerCase().localeCompare((optionB?.value ?? "").toLowerCase())
             }
+            onChange={(e) => {
+              handleChangeSelect(e);
+            }}
           />
         </Form.Item>
 
@@ -141,9 +152,11 @@ const EditPemesananForm = ({ pemesanan, barang }) => {
               message: "Masukan jumlah barang!",
             },
           ]}
-          initialValue={pemesanan.jumlah}
         >
-          <InputNumber placeholder="0" />
+          <div className="flex items-center gap-3">
+            <InputNumber placeholder="0" defaultValue={pemesanan.jumlah} />
+            <span>{satuan}</span>
+          </div>
         </Form.Item>
 
         <Form.Item

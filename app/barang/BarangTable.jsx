@@ -19,7 +19,7 @@ const BarangTable = ({ barang }) => {
     setDeleteLoading(false);
     messageApi.open({
       type: "success",
-      content: "Data dihapus",
+      content: "Berhasil menghapus data",
     });
     router.refresh();
   };

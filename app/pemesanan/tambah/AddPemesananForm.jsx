@@ -9,6 +9,7 @@ const AddPemesananForm = ({ barang }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectOption, setSelectOption] = useState([]);
+  const [satuan, setSatuan] = useState("");
 
   useEffect(() => {
     const newSelectOption = [];
@@ -18,12 +19,17 @@ const AddPemesananForm = ({ barang }) => {
     setSelectOption(newSelectOption);
   }, []);
 
-  const checkSatuan = (nama) => {
+  const checkSatuan = (nama_barang) => {
     const satuan = barang.filter((items) => {
-      return items.namaBarang === nama;
+      return items.namaBarang === nama_barang;
     });
 
     return satuan[0].satuan;
+  };
+
+  const handleChangeSelect = (e) => {
+    const newSatuan = checkSatuan(e);
+    setSatuan(newSatuan);
   };
 
   const onFinish = async (values) => {
@@ -104,6 +110,9 @@ const AddPemesananForm = ({ barang }) => {
             filterSort={(optionA, optionB) =>
               (optionA?.value ?? "").toLowerCase().localeCompare((optionB?.value ?? "").toLowerCase())
             }
+            onChange={(e) => {
+              handleChangeSelect(e);
+            }}
           />
         </Form.Item>
 
@@ -117,7 +126,10 @@ const AddPemesananForm = ({ barang }) => {
             },
           ]}
         >
-          <InputNumber placeholder="0" />
+          <div className="flex items-center gap-3">
+            <InputNumber placeholder="0" />
+            <span>{satuan}</span>
+          </div>
         </Form.Item>
 
         <Form.Item

@@ -114,6 +114,7 @@ const ComparisonTable = ({ barang, comparisonData }) => {
               },
             ]}
             pagination={false}
+            rowKey={"id"}
           />
         </div>
       ))}

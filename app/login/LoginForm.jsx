@@ -1,34 +1,31 @@
 "use client";
 import { Form, Input, message } from "antd";
+import ButtonSpinner from "../components/ButtonSpinner";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-const LoginForm = ({ user, setCookie }) => {
+const LoginForm = ({ handleLogin, setCookie }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
-  const onFinish = (values) => {
-    const userLogin = user.filter((item) => {
-      return values.username === item.username;
-    });
-    if (userLogin.length === 0) {
+  const onFinish = async (values) => {
+    setLoading(true);
+    const loginCheck = await handleLogin(values.username, values.password);
+    if (loginCheck === false) {
       messageApi.open({
         type: "error",
-        content: "Username tak ditemukan",
+        content: "Username atau password salah",
       });
+      setLoading(false);
     } else {
-      if (userLogin[0].password === values.password) {
-        messageApi.open({
-          type: "success",
-          content: "Berhasil login",
-        });
-        setCookie();
-        router.push("/");
-      } else {
-        messageApi.open({
-          type: "error",
-          content: "Password yang dimasukan salah",
-        });
-      }
+      messageApi.open({
+        type: "success",
+        content: "Berhasil login",
+      });
+      await setCookie();
+      setLoading(false);
+      router.push("/");
     }
   };
   const onFinishFailed = (errorInfo) => {
@@ -52,6 +49,7 @@ const LoginForm = ({ user, setCookie }) => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
         requiredMark={false}
+        disabled={loading}
       >
         <Form.Item
           label="Username"
@@ -85,8 +83,14 @@ const LoginForm = ({ user, setCookie }) => {
           <button
             type="submit"
             className="h-[35px] w-full bg-indigo-500 text-white font-medium rounded-md hover:opacity-70 transition-all shadow-md"
+            disabled={loading}
           >
-            Login
+            {loading && (
+              <div>
+                <ButtonSpinner />
+              </div>
+            )}
+            {!loading && <div>Login</div>}
           </button>
         </Form.Item>
       </Form>
