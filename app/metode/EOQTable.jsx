@@ -52,9 +52,10 @@ const EOQTable = ({ barang, penjualan, comparisonData, setComparisonData }) => {
 
     const reorderPoint = Math.ceil((averageSalesInYear / 26) * leadTime + safetyStock);
 
+    const totalPurchaseCost = Math.ceil(totalSalesInYear * itemCost[0]);
     const totalOrderCost = Math.round((totalSalesInYear * orderCost[0]) / EOQ);
     const totalStorageCost = Math.round((EOQ * holdingCost) / 2);
-    const totalCost = Math.round(totalSalesInYear * itemCost[0] + totalOrderCost + totalStorageCost);
+    const totalCost = Math.round(totalPurchaseCost + totalOrderCost + totalStorageCost);
 
     return {
       totalSalesInYear: totalSalesInYear,
@@ -66,6 +67,7 @@ const EOQTable = ({ barang, penjualan, comparisonData, setComparisonData }) => {
       reorderPoint: reorderPoint,
       safetyStock: safetyStock,
       orderCost: orderCost[0],
+      totalPurchaseCost: totalPurchaseCost,
       totalOrderCost: totalOrderCost,
       totalStorageCost: totalStorageCost,
       totalCost: totalCost,
@@ -171,6 +173,13 @@ const EOQTable = ({ barang, penjualan, comparisonData, setComparisonData }) => {
       dataIndex: "reorderPoint",
       align: "center",
       width: 120,
+    },
+    {
+      title: "Total biaya beli",
+      dataIndex: "totalPurchaseCost",
+      align: "center",
+      width: 120,
+      render: (item, record, index) => <p>Rp. {record.totalPurchaseCost.toLocaleString()}</p>,
     },
     {
       title: "Total biaya pesan",

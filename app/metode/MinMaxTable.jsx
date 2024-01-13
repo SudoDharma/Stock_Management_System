@@ -51,9 +51,10 @@ const MinMaxTable = ({ barang, penjualan, comparisonData, setComparisonData }) =
     const orderQuantity = Math.ceil(2 * averageSalesInYear * leadTime);
     const frequency = Math.ceil(totalSalesInYear / orderQuantity);
 
+    const totalPurchaseCost = Math.ceil(totalSalesInYear * itemCost[0]);
     const totalOrderCost = Math.ceil((totalSalesInYear * orderCost[0]) / orderQuantity);
     const totalStorageCost = Math.ceil((orderQuantity * holdingCost) / 2);
-    const totalCost = Math.ceil(totalSalesInYear * itemCost[0] + totalOrderCost + totalStorageCost);
+    const totalCost = Math.ceil(totalPurchaseCost + totalOrderCost + totalStorageCost);
 
     return {
       leadTime: leadTime.toFixed(2),
@@ -68,6 +69,7 @@ const MinMaxTable = ({ barang, penjualan, comparisonData, setComparisonData }) =
       orderQuantity: orderQuantity,
       frequency: frequency,
       holdingCost: holdingCost,
+      totalPurchaseCost: totalPurchaseCost,
       totalOrderCost: totalOrderCost,
       totalStorageCost: totalStorageCost,
       totalCost: totalCost,
@@ -184,6 +186,13 @@ const MinMaxTable = ({ barang, penjualan, comparisonData, setComparisonData }) =
       align: "center",
       width: 120,
       render: (item, record, index) => <p>{record.holdingCost.toLocaleString()}</p>,
+    },
+    {
+      title: "Total biaya beli",
+      dataIndex: "totalPurchaseCost",
+      align: "center",
+      width: 120,
+      render: (item, record, index) => <p>Rp. {record.totalPurchaseCost.toLocaleString()}</p>,
     },
     {
       title: "Total biaya pesan",

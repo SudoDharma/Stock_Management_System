@@ -66,9 +66,10 @@ const NormalTable = ({ barang, penjualan, pemesanan, comparisonData, setComparis
     const orderQuantity = Math.round(totalOrderInYear / 12);
     const frequency = itemOrder.length;
 
+    const totalPurchaseCost = Math.ceil(totalSalesInYear * itemCost[0]);
     const totalOrderCost = Math.round((totalSalesInYear * orderCost[0]) / orderQuantity);
     const totalStorageCost = Math.round((orderQuantity * holdingCost) / 2);
-    const totalCost = Math.round(totalSalesInYear * itemCost[0] + totalOrderCost + totalStorageCost);
+    const totalCost = Math.round(totalPurchaseCost + totalOrderCost + totalStorageCost);
 
     return {
       itemCost: itemCost[0],
@@ -77,6 +78,7 @@ const NormalTable = ({ barang, penjualan, pemesanan, comparisonData, setComparis
       orderQuantity: orderQuantity,
       frequency: frequency,
       holdingCost: holdingCost,
+      totalPurchaseCost: totalPurchaseCost,
       totalOrderCost: totalOrderCost,
       totalStorageCost: totalStorageCost,
       totalCost: totalCost,
@@ -157,6 +159,13 @@ const NormalTable = ({ barang, penjualan, pemesanan, comparisonData, setComparis
       align: "center",
       width: 120,
       render: (item, record, index) => <p>{record.holdingCost.toLocaleString()}</p>,
+    },
+    {
+      title: "Total biaya beli",
+      dataIndex: "totalPurchaseCost",
+      align: "center",
+      width: 120,
+      render: (item, record, index) => <p>Rp. {record.totalPurchaseCost.toLocaleString()}</p>,
     },
     {
       title: "Total biaya pesan",

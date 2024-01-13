@@ -19,7 +19,7 @@ export const DELETE = async (req, { params }) => {
 export const PUT = async (req, { params }) => {
   try {
     const body = await req.json();
-    const { namaBarang, stok, satuan, harga } = body;
+    const { namaBarang, stok, satuan, harga, hargaPemesanan } = body;
     const newBarang = await prisma.barang.update({
       where: {
         id: Number(params.id),
@@ -29,6 +29,7 @@ export const PUT = async (req, { params }) => {
         stok,
         satuan,
         harga,
+        hargaPemesanan,
       },
     });
     return NextResponse.json({ newBarang, message: "Ok" }, { status: 200 });

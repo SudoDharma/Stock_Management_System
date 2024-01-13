@@ -7,7 +7,13 @@ dayjs.extend(customParseFormat);
 const prisma = new PrismaClient();
 
 const getBarang = async () => {
-  const res = await prisma.barang.findMany();
+  // const res = await prisma.barang.findMany();
+  // return res;
+
+  const res = await prisma.barang.findMany({
+    where: { id: { gte: 1, lte: 24 } },
+  });
+
   return res;
 };
 

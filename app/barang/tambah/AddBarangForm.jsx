@@ -145,6 +145,19 @@ const AddBarangForm = () => {
         </Form.Item>
 
         <Form.Item
+          label="Harga pemesanan"
+          name="hargaPemesanan"
+          rules={[
+            {
+              required: true,
+              message: "Masukan harga pemesanan!",
+            },
+          ]}
+        >
+          <InputNumber placeholder="20000" />
+        </Form.Item>
+
+        <Form.Item
           wrapperCol={{
             offset: 21,
           }}
